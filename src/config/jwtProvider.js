@@ -12,9 +12,9 @@ const generateToken=(userId)=>{
 
 const getUserIdFromToken=(token)=>{
     const decodedToken=jwt.verify(token,SECRET_KEY)
-    console.log(token);
-    console.log(SECRET_KEY);
-    console.log(decodedToken);
+    // console.log(token);
+    // console.log(SECRET_KEY);
+    // console.log(decodedToken);
     return decodedToken.userId;
 }
 

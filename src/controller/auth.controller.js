@@ -6,10 +6,10 @@ const User = require("../models/user.model.js");
 const register = async (req, res) => {
   try {
     const user = await userService.createUser(req.body);
-    console.log(user)
+    
     const jwt = jwtProvider.generateToken(user._id);
-
-    // await cartservice.createCart(user);
+    console.log(user)
+    await cartservice.createCart(user);
 
     return res.status(200).send({ jwt, message: "register success" });
   } catch (error) {
@@ -20,7 +20,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   const { password, email } = req.body;
   try {
-    const user = userService.getUserByEmail(email);
+    const user = await userService.getUserByEmail(email);
     if (!user) {
       return res
         .status(404)

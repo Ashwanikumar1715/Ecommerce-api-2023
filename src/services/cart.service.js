@@ -5,8 +5,11 @@ const Product = require("../models/product.model");
 
 async function createCart(user){
   try {
+    console.log(user);
     const cart=new Cart({user});
+    console.log(cart);
     const createdCart=await cart.save();
+    console.log(createdCart)
     return createdCart;
 
   } catch (error) {
@@ -16,7 +19,7 @@ async function createCart(user){
 
 async function findUserCart(userId){
 try {
-  let cart=await Cart.findOne({user:user});
+  let cart=await Cart.findOne({user:userId});
   let cartItems=await CartItem.find({cart:cart._id}).populate("product");
   cart.cartitems=cartItems;
   let totalPrice=0;
