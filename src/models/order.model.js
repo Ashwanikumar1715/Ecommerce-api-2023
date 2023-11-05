@@ -7,18 +7,20 @@ const orderSchema = new Schema({
     ref: "users",
     // required: true,
   },
-  orderItems: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "orderItems",
-
-  },
+  orderItems: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "orderItems",
+  
+    },
+  ],
   orderDate: {
     type: Date,
-    required: true,
+    default: Date.now,
   },
   deliveryDate: {
     type: Date,
-    required: true,
+    default: Date.now,
   },
   shippingAddress: {
     type: mongoose.Schema.Types.ObjectId,

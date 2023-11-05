@@ -1,7 +1,7 @@
 const orderService = require("../services/oreder.service");
 
 const createOrder = async (req, res) => {
-  const user = req.user;
+  const user = await req.user;
   try {
     let createdOrder = await orderService.createOrder(user, req.body);
     return res.status(201).send(createdOrder);
@@ -11,7 +11,7 @@ const createOrder = async (req, res) => {
 };
 
 const findOrderById = async (req, res) => {
-  const user = req.user;
+  const user = await req.user;
   try {
    
     let createdOrder = await orderService.findOrderById(req.params.id);
@@ -22,7 +22,7 @@ const findOrderById = async (req, res) => {
 };
 
 const orderHistory = async (req, res) => {
-    const user = req.user;
+    const user = await req.user;
     try {
       
       let createdOrder = await orderService.userOrderHistory(user._id);

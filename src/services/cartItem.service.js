@@ -1,3 +1,4 @@
+const CartItem = require("../models/cartItem.model");
 const userService = require("../services/user.service");
 
 async function updateCartItem(userId, cartItemId, cartItemData) {
@@ -7,7 +8,7 @@ async function updateCartItem(userId, cartItemId, cartItemData) {
     if (!item) {
       throw new Error("cart item not found", cartItemId);
     }
-    const user = await userService.findUserById(item.userId);
+    const user = await userService.findUserById(userId);
 
     if (!user) {
       throw new Error("user not found", userId);
@@ -31,13 +32,13 @@ async function removeCartItem(userId, cartItemId) {
   const user = await userService.findUserById(userId);
 
   if (user._id.toString() === cartItem.userId.toString()) {
-    await CartItem.findCartItemByIdAndDelete(cartItemId);
+    return await CartItem.findByIdAndDelete(cartItemId);
   }
   throw new Error("you cannot remove another user's item");
 }
 
 async function findCartItemById(cartItemId) {
-  const cartItem = await findCartItemById(cartItemId);
+  const cartItem = await CartItem.findById(cartItemId).populate("product");
 
   if (cartItem) {
     return cartItem;

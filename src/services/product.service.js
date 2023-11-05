@@ -2,39 +2,54 @@ const Category = require("../models/category.model");
 const Product = require("../models/product.model");
 
 async function createProduct(reqData) {
-  let toplevel = await Category.findOne({ name: reqData.topLevelCategory });
+  if (
+    !reqData.topLavelCategory ||
+    !reqData.secondLavelCategory ||
+    !reqData.thirdLavelCategory
+  ) {
+    throw new Error(
+      'topLevelCategory, secondLevelCategory, and thirdLavelCategory are required in reqData.'
+    );
+  }
+
+  let toplevel = await Category.findOne({ name: reqData.topLavelCategory });
 
   if (!toplevel) {
     toplevel = new Category({
-      name: reqData.topLevelCategory,
+      name: reqData.topLavelCategory,
       level: 1,
     });
+    await toplevel.save();
   }
 
   let secondLevel = await Category.findOne({
-    name: reqData.secondLevelCategory,
+    name: reqData.secondLavelCategory,
     parentCategory: toplevel._id,
   });
 
   if (!secondLevel) {
     secondLevel = new Category({
-      name: reqData.secondLevelCategory,
+      name: reqData.secondLavelCategory,
       parentCategory: toplevel._id,
       level: 2,
     });
+    await secondLevel.save();
   }
 
   let thirdLevel = await Category.findOne({
-    name: reqData.thirdLevelCategory,
+    name: reqData.thirdLavelCategory,
     parentCategory: secondLevel._id,
   });
+
   if (!thirdLevel) {
     thirdLevel = new Category({
-      name: reqData.thirdLevelCategory,
+      name: reqData.thirdLavelCategory,
       parentCategory: secondLevel._id,
       level: 3,
     });
+    await thirdLevel.save();
   }
+ console.log(thirdLevel)
 
   const product = new Product({
     title: reqData.title,
@@ -51,6 +66,7 @@ async function createProduct(reqData) {
   });
   return await product.save();
 }
+
 
 async function deleteProduct(productId) {
   const product = await findProductById(productId);
@@ -112,7 +128,7 @@ async function getAllProducts(reqQuery) {
     query.query.where("sizes.name").in([...sizesSet]);
   }
 
-  if (minprice && maxPrice) {
+  if (minPrice && maxPrice) {
     query = query.where("discountedPrice").gte(minPrice).lte(maxPrice);
   }
 

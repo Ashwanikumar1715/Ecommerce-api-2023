@@ -8,7 +8,7 @@ const cartItemSchema = new mongoose.Schema({
   },
   product: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "product",
+    ref: "products",
     required: true,
   },
   size: {
@@ -36,5 +36,5 @@ const cartItemSchema = new mongoose.Schema({
   },
 });
 
-const CartItem = mongoose.model("cartItem", cartItemSchema);
+const CartItem = mongoose.model("cartItems", cartItemSchema);
 module.exports = CartItem;
