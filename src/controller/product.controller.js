@@ -45,7 +45,7 @@ const findProductById = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
   try {
-    const products = await productService.getAllProducts(req);
+    const products = await productService.getAllProducts(req.query);
     return res.status(200).send(products);
   } catch (error) {
     console.log(error)
