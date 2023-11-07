@@ -44,15 +44,15 @@ const findProductById = async (req, res) => {
 };
 
 const getAllProducts = async (req, res) => {
-    // const productId = req.params.id;
   try {
-
-    const products = await productService.getAllProducts(req.query);
+    const products = await productService.getAllProducts(req);
     return res.status(200).send(products);
   } catch (error) {
+    console.log(error)
     return res.status(500).send({ error: error.message });
   }
 };
+
 
 const createMultipleProduct = async (req, res) => {
     // const productId = req.params.id;

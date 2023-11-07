@@ -69,7 +69,8 @@ async function createProduct(reqData) {
 
 
 async function deleteProduct(productId) {
-  const product = await findProductById(productId);
+
+  // const product = await findProductById(productId);
 
   await Product.findByIdAndDelete(productId);
   return "Product deleted successfully";
@@ -88,12 +89,22 @@ async function findProductById(id) {
   return product;
 }
 
+async function findProductById(id) {
+  const product = await Product.findById(id).populate("category").exec();
+
+  if (!product) {
+    throw new Error("Product not found with id: " + id);
+  }
+  return product;
+}
+
 async function getAllProducts(reqQuery) {
   let {
     category,
     color,
     sizes,
     minPrice,
+    maxPrice,
     minDiscount,
     sort,
     stock,
@@ -106,26 +117,26 @@ async function getAllProducts(reqQuery) {
   let query = Product.find().populate("category");
 
   if (category) {
-    const existCategory = await Category.findOne({ name: category });
+    const existCategory =  Category.findOne({ name: category });
     if (existCategory) {
-      query.where("category").equals(existCategory._id);
+      query = query.where("category").equals(existCategory._id);
     } else {
-      return { content: [], currentPage: 1, totalPage: 0 };
+      return { content: [], currentPage: 1, totalPages: 0 };
     }
   }
 
   if (color) {
-    const colorList = new Set(
-      color.split(",").map((color) => color.trim().toLowercase())
+    const colorSet = new Set(
+      color.split(",").map((color) => color.trim().toLowerCase())
     );
     const colorRegex =
-      colorSet.size > 0 ? new RegExp([...colorSet].join("|"), "1") : null;
-    query = query.where("color".regex(colorRegex));
+      colorSet.size > 0 ? new RegExp([...colorSet].join("|"), "i") : null;
+    query = query.where("color").regex(colorRegex);
   }
 
   if (sizes) {
-    const sizes = new Set(sizes);
-    query.query.where("sizes.name").in([...sizesSet]);
+    const sizesSet = new Set(sizes);
+    query.where("sizes.name").in([...sizesSet]);
   }
 
   if (minPrice && maxPrice) {
@@ -133,24 +144,25 @@ async function getAllProducts(reqQuery) {
   }
 
   if (minDiscount) {
-    query = query.where("discountPresent").gte(minDiscount);
+    query = query.where("discountPresent").gt(minDiscount);
   }
 
   if (stock) {
-    if (stock == "in_stock") {
+    if (stock === "in_stock") {
       query = query.where("quantity").gt(0);
-    } else if (stock == "out_of_stock") {
+    } else if (stock === "out_of_stock") {
       query = query.where("quantity").gt(1);
     }
   }
+
   if (sort) {
-    const sortDirection = sort === "price_height" ? -1 : 1;
+    const sortDirection = sort === "price_high" ? -1 : 1;
     query = query.sort({ discountedPrice: sortDirection });
   }
 
   const totalProducts = await Product.countDocuments(query);
 
-  const skip = (pageNumber - 1) * pageSize;
+  const skip = pageNumber > 1 ? (pageNumber - 1) * pageSize : 0;
 
   query = query.skip(skip).limit(pageSize);
 
@@ -160,6 +172,7 @@ async function getAllProducts(reqQuery) {
 
   return { content: products, currentPage: pageNumber, totalPages };
 }
+
 
 async function createMultipleProduct(products){
     for(let product of products){
