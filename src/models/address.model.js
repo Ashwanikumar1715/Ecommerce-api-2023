@@ -26,7 +26,7 @@ const AddressSchema = new mongoose.Schema({
     required: true,
   },
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.ObjectId,
     ref: "users",
   },
   mobile: {

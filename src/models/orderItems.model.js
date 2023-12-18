@@ -13,7 +13,7 @@ const orderItemSchema = new Schema({
     // required: true,
   },
   quantity: {
-    type: String,
+    type: Number,
     required: true,
   },
   price: {
@@ -32,10 +32,7 @@ const orderItemSchema = new Schema({
 
   },
  
-  deliveryDate: {
-    type: Date,
-    // default:Date.now,
-  },
+
 
 });
 

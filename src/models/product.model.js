@@ -3,17 +3,17 @@ const mongoose = require("mongoose");
 const productSchema = new mongoose.Schema({
   title: {
     type: String,
-   
+   required:true,
   },
   description: {
     type: String,
-   
+   required:true,
   },
 
 
   price: {
     type: Number,
-    // required: true,
+    required: true,
     // default: 0,
   },
   discountedPrice: {
@@ -26,6 +26,7 @@ const productSchema = new mongoose.Schema({
   },
   quantity: {
     type: Number,
+    required: true,
 
   },
   brand: {
@@ -70,7 +71,7 @@ const productSchema = new mongoose.Schema({
   },
   createdAt:{
     type:Date,
-    default:Date.now,
+    default:Date.now(),
   }
 });
 

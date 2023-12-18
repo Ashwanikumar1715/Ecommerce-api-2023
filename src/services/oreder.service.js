@@ -5,9 +5,8 @@ const cartService = require("../services/cart.service");
 
 async function createOrder(user, shipAddress) {
   let address;
-
-  if (shipAddress._id) {
-    let existAddress = await Address.findById(shipAddress._id);
+  let existAddress = await Address.findById(shipAddress._id);
+  if (existAddress) {
     address = existAddress;
   } else {
     address = new Address(shipAddress);
@@ -21,11 +20,11 @@ async function createOrder(user, shipAddress) {
   const cart = await cartService.findUserCart(user._id);
   const orderItems = [];
 
-  for (const item of cart.cartitems) {
+  for (const item of cart.cartItems) {
     const orderItem = new OrderItem({
       price: item.price,
       product: item.product,
-      quantity: item.size,
+      quantity: item.quantity,
       size: item.size,
       userId: item.userId,
       discountedPrice: item.discountedPrice,
@@ -42,7 +41,7 @@ async function createOrder(user, shipAddress) {
     totalDiscountedPrice: cart.totalDiscountedPrice,
     discounte: cart.discounte,
     totalItem: cart.totalItem,
-    shipAddress: address,
+    shippingAddress: address,
   });
 
   const saveOrder = await createOrder.save();
@@ -50,6 +49,7 @@ async function createOrder(user, shipAddress) {
 }
 
 async function placeOrder(orderId) {
+ 
   const order = await findOrderById(orderId);
 
   order.orderStatus = "PLACED";
@@ -77,12 +77,13 @@ async function shipOrder(orderId) {
 async function deliverOrder(orderId) {
   const order = await findOrderById(orderId);
 
-  order.orderStatus = "Devivered";
+  order.orderStatus = "Delivered";
 
   return await order.save();
 }
 
 async function cancelledOrder(orderId) {
+ 
   const order = await findOrderById(orderId);
 
   order.orderStatus = "Cancelled";
@@ -91,13 +92,22 @@ async function cancelledOrder(orderId) {
 }
 
 async function findOrderById(orderId) {
-  const order = await Order.findById(orderId)
-    .populate("user")
-    .populate({ path: "orderItems", populate: { path: "product" } })
-    .populate("shippingAddress");
+  try {
+    // console.log("Finding order by ID:", orderId);
 
-  return order;
+    const order = await Order.findById(orderId)
+      .populate("user")
+      .populate({ path: "orderItems", populate: { path: "product" } })
+      .populate("shippingAddress");
+
+    // console.log("Fetched Order:", order);
+    return order;
+  } catch (error) {
+    console.error("Error finding order by ID:", error);
+    throw error;
+  }
 }
+
 
 async function userOrderHistory(userId) {
   try {

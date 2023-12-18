@@ -9,7 +9,7 @@ router.put("/:orderId/confirmed",authenticate,orderController.confirmedOrders)
 router.put("/:orderId/ship",authenticate,orderController.shipOrders)
 router.put("/:orderId/deliver",authenticate,orderController.deleteOrders)
 router.put("/:orderId/cancel",authenticate,orderController.cancelledOrders)
-router.put("/:orderId/delete",authenticate,orderController.deleteOrders)
+router.delete("/:orderId/delete",authenticate,orderController.deleteOrders)
 
 
 module.exports=router;

@@ -63,7 +63,7 @@ const getUserProffileByToken = async (token) => {
   
         return user;
     } catch (error) {
-        throw error; // Re-throw the error to be handled in the calling function
+        throw new Error(error.message);
     }
 }
 

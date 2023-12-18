@@ -12,25 +12,25 @@ async function createProduct(reqData) {
     );
   }
 
-  let toplevel = await Category.findOne({ name: reqData.topLavelCategory });
+  let topLevel = await Category.findOne({ name: reqData.topLavelCategory });
 
-  if (!toplevel) {
-    toplevel = new Category({
+  if (!topLevel) {
+    topLevel = new Category({
       name: reqData.topLavelCategory,
       level: 1,
     });
-    await toplevel.save();
+    await topLevel.save();
   }
 
   let secondLevel = await Category.findOne({
     name: reqData.secondLavelCategory,
-    parentCategory: toplevel._id,
+    parentCategory: topLevel._id,
   });
 
   if (!secondLevel) {
     secondLevel = new Category({
       name: reqData.secondLavelCategory,
-      parentCategory: toplevel._id,
+      parentCategory: topLevel._id,
       level: 2,
     });
     await secondLevel.save();
@@ -49,7 +49,7 @@ async function createProduct(reqData) {
     });
     await thirdLevel.save();
   }
- console.log(thirdLevel)
+
 
   const product = new Product({
     title: reqData.title,
@@ -70,13 +70,13 @@ async function createProduct(reqData) {
 
 async function deleteProduct(productId) {
 
-  // const product = await findProductById(productId);
+  const product = await findProductById(productId);
 
   await Product.findByIdAndDelete(productId);
   return "Product deleted successfully";
 }
 
-async function updateProduct(productId) {
+async function updateProduct(productId,reqData) {
   return await Product.findByIdAndUpdate(productId, reqData);
 }
 
@@ -84,7 +84,7 @@ async function findProductById(id) {
   const product = await Product.findById(id).populate("category").exec();
 
   if (!product) {
-    throw new Error("Product not found with id:" + id);
+    throw new Error("Product not found with id:" , id);
   }
   return product;
 }
@@ -117,13 +117,14 @@ async function getAllProducts(reqQuery) {
   let query = Product.find().populate("category");
 
   if (category) {
-    const existCategory =  Category.findOne({ name: category });
+    const existCategory = await Category.findOne({ name: category });
     if (existCategory) {
-      query = query.where("category").equals(existCategory._id);
+      query = query.where({ category: existCategory._id });
     } else {
       return { content: [], currentPage: 1, totalPages: 0 };
     }
   }
+  
 
   if (color) {
     const colorSet = new Set(
@@ -136,7 +137,7 @@ async function getAllProducts(reqQuery) {
 
   if (sizes) {
     const sizesSet = new Set(sizes);
-    query.where("sizes.name").in([...sizesSet]);
+   query.query.where("sizes.name").in([...sizesSet]);
   }
 
   if (minPrice && maxPrice) {
@@ -144,7 +145,7 @@ async function getAllProducts(reqQuery) {
   }
 
   if (minDiscount) {
-    query = query.where("discountPresent").gt(minDiscount);
+    query =  query.where("discountPresent").gte(minDiscount);
   }
 
   if (stock) {
@@ -162,7 +163,7 @@ async function getAllProducts(reqQuery) {
 
   const totalProducts = await Product.countDocuments(query);
 
-  const skip = pageNumber > 1 ? (pageNumber - 1) * pageSize : 0;
+  const skip = Math.max(pageNumber-1,0)*pageSize;
 
   query = query.skip(skip).limit(pageSize);
 

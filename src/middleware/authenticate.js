@@ -2,6 +2,7 @@ const userService = require("../services/user.service");
 const jwtProvider = require("../config/jwtProvider"); // Import your JWT provider
 
 const authenticate = async (req, res, next) => {
+  // console.log('Request payload before authentication:', req.body);
   // Bearer token..........
   try {
     const token = req.headers.authorization?.split(" ")[1];
@@ -18,6 +19,7 @@ const authenticate = async (req, res, next) => {
   } catch (error) {
     return res.status(500).send({ error: error.message });
   }
+  // console.log('Request payload after authentication:', req.body);
   next();
 };
 

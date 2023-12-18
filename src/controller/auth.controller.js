@@ -8,7 +8,7 @@ const register = async (req, res) => {
     const user = await userService.createUser(req.body);
     
     const jwt = jwtProvider.generateToken(user._id);
-    console.log(user)
+   
     await cartservice.createCart(user);
 
     return res.status(200).send({ jwt, message: "register success" });
@@ -26,7 +26,7 @@ const login = async (req, res) => {
         .status(404)
         .send({ message: "user not found with email:", email });
     }
-    const isPasswordValid = await bcrypt.compare(password,(await user).password);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
 
     if (!isPasswordValid) {

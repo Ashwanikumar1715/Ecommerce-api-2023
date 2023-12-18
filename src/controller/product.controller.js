@@ -2,7 +2,7 @@ const productService = require("../services/product.service");
 
 const createProduct = async (req, res) => {
   try {
-    console.log(req.body);
+    // console.log(req.body);
     const product = await productService.createProduct(req.body);
     return res.status(201).send(product);
   } catch (error) {
@@ -45,7 +45,9 @@ const findProductById = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
   try {
+  
     const products = await productService.getAllProducts(req.query);
+    // console.log("allProducts", products);
     return res.status(200).send(products);
   } catch (error) {
     console.log(error)

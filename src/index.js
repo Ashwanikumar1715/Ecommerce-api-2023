@@ -1,14 +1,20 @@
+require('dotenv').config()
+
 const express = require("express");
 
 const cors = require("cors");
 
 const app = express();
 
+
+
 app.use(express.json());
 app.use(cors({
   origin: 'http://localhost:3000',
   credentials: true,
 }));
+
+
 
 app.get("/", (req, res) => {
   return res.status(200).send({ message: "welcome to rest api" });
@@ -44,5 +50,7 @@ app.use("/api/ratings", ratingRouter);
 const adminOrderRouter=require("./routes/adminOrdered.route.js")
 app.use("/api/admin/orders", adminOrderRouter);
 
+const paymentRouter=require("./routes/payment.route.js")
+app.use("/api/payments", paymentRouter);
 
 module.exports = app;

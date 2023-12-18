@@ -16,11 +16,12 @@ const orderSchema = new Schema({
   ],
   orderDate: {
     type: Date,
-    default: Date.now,
+    required:true,
+    default: Date.now(),
   },
-  deliveryDate: {
+  deliveryDate: { 
     type: Date,
-    default: Date.now,
+    // default: Date.now,
   },
   shippingAddress: {
     type: mongoose.Schema.Types.ObjectId,
@@ -39,6 +40,7 @@ const orderSchema = new Schema({
     },
     paymentStatus:{
         type:String,
+        default:"PENDING"
     }
   },
   totalPrice: {
@@ -64,7 +66,7 @@ const orderSchema = new Schema({
   },
   createdAt: {
     type: Date,
-    default:Date.now,
+    default:Date.now(),
   },
 
 });
