@@ -19,7 +19,7 @@ const createPaymentLinkService = async (orderId) => {
         email: true,
       },
       reminder_enable: true,
-      callback_url: `http://localhost:3000/payments/${orderId}`,
+      callback_url: `https://ashwanimartf.onrender.com/payments/${orderId}`,
       callback_method: 'get',
     };
 
