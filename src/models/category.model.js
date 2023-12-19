@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
 const categorySchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-        maxlength:50,
-      },
+  name: {
+    type: String,
+    required: true,
+    maxlength: 50,
+  },
   parentCategory: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "categories",
@@ -13,9 +13,7 @@ const categorySchema = new mongoose.Schema({
   level: {
     type: Number,
     required: true,
-  
   },
- 
 });
 
 const Category = mongoose.model("categories", categorySchema);

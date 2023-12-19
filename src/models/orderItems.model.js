@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const {Schema}=mongoose;
+const { Schema } = mongoose;
 
 const orderItemSchema = new Schema({
   product: {
@@ -28,12 +28,8 @@ const orderItemSchema = new Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "users",
-    required:true,
-
+    required: true,
   },
- 
-
-
 });
 
 const OrderItem = mongoose.model("orderItems", orderItemSchema);

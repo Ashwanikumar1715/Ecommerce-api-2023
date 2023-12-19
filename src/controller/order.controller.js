@@ -14,7 +14,6 @@ const createOrder = async (req, res) => {
 const findOrderById = async (req, res) => {
   const user = await req.user;
   try {
- 
     let createdOrder = await orderService.findOrderById(req.params.id);
     return res.status(200).send(createdOrder);
   } catch (error) {
@@ -23,18 +22,17 @@ const findOrderById = async (req, res) => {
 };
 
 const orderHistory = async (req, res) => {
-    const user = await req.user;
-    try {
-      
-      let createdOrder = await orderService.userOrderHistory(user._id);
-      return res.status(200).send(createdOrder);
-    } catch (error) {
-      return res.status(500).send({ error: error.message });
-    }
-  };
+  const user = await req.user;
+  try {
+    let createdOrder = await orderService.userOrderHistory(user._id);
+    return res.status(200).send(createdOrder);
+  } catch (error) {
+    return res.status(500).send({ error: error.message });
+  }
+};
 
 module.exports = {
-createOrder,
-findOrderById,
-orderHistory
+  createOrder,
+  findOrderById,
+  orderHistory,
 };

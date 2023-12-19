@@ -8,7 +8,7 @@ async function createProduct(reqData) {
     !reqData.thirdLavelCategory
   ) {
     throw new Error(
-      'topLevelCategory, secondLevelCategory, and thirdLavelCategory are required in reqData.'
+      "topLevelCategory, secondLevelCategory, and thirdLavelCategory are required in reqData."
     );
   }
 
@@ -50,7 +50,6 @@ async function createProduct(reqData) {
     await thirdLevel.save();
   }
 
-
   const product = new Product({
     title: reqData.title,
     color: reqData.color,
@@ -67,16 +66,14 @@ async function createProduct(reqData) {
   return await product.save();
 }
 
-
 async function deleteProduct(productId) {
-
   const product = await findProductById(productId);
 
   await Product.findByIdAndDelete(productId);
   return "Product deleted successfully";
 }
 
-async function updateProduct(productId,reqData) {
+async function updateProduct(productId, reqData) {
   return await Product.findByIdAndUpdate(productId, reqData);
 }
 
@@ -84,7 +81,7 @@ async function findProductById(id) {
   const product = await Product.findById(id).populate("category").exec();
 
   if (!product) {
-    throw new Error("Product not found with id:" , id);
+    throw new Error("Product not found with id:", id);
   }
   return product;
 }
@@ -124,7 +121,6 @@ async function getAllProducts(reqQuery) {
       return { content: [], currentPage: 1, totalPages: 0 };
     }
   }
-  
 
   if (color) {
     const colorSet = new Set(
@@ -137,7 +133,7 @@ async function getAllProducts(reqQuery) {
 
   if (sizes) {
     const sizesSet = new Set(sizes);
-   query.query.where("sizes.name").in([...sizesSet]);
+    query.query.where("sizes.name").in([...sizesSet]);
   }
 
   if (minPrice && maxPrice) {
@@ -145,7 +141,7 @@ async function getAllProducts(reqQuery) {
   }
 
   if (minDiscount) {
-    query =  query.where("discountPresent").gte(minDiscount);
+    query = query.where("discountPresent").gte(minDiscount);
   }
 
   if (stock) {
@@ -163,7 +159,7 @@ async function getAllProducts(reqQuery) {
 
   const totalProducts = await Product.countDocuments(query);
 
-  const skip = Math.max(pageNumber-1,0)*pageSize;
+  const skip = Math.max(pageNumber - 1, 0) * pageSize;
 
   query = query.skip(skip).limit(pageSize);
 
@@ -174,18 +170,17 @@ async function getAllProducts(reqQuery) {
   return { content: products, currentPage: pageNumber, totalPages };
 }
 
-
-async function createMultipleProduct(products){
-    for(let product of products){
-        await createProduct(product);
-    }
+async function createMultipleProduct(products) {
+  for (let product of products) {
+    await createProduct(product);
+  }
 }
 
-module.exports={
-    createProduct,
-    deleteProduct,
-    updateProduct,
-    getAllProducts,
-    findProductById,
-    createMultipleProduct,
-}
+module.exports = {
+  createProduct,
+  deleteProduct,
+  updateProduct,
+  getAllProducts,
+  findProductById,
+  createMultipleProduct,
+};

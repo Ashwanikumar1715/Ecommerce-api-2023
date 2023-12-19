@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const {Schema}=mongoose;
+const { Schema } = mongoose;
 
 const ratingSchema = new Schema({
   user: {
@@ -12,16 +12,15 @@ const ratingSchema = new Schema({
     ref: "products",
     required: true,
   },
- 
+
   rating: {
     type: Number,
     required: true,
   },
- createdAt: {
+  createdAt: {
     type: Date,
-    default:Date.now(),
+    default: Date.now(),
   },
-
 });
 
 const Rating = mongoose.model("ratings", ratingSchema);

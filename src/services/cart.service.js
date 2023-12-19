@@ -15,10 +15,9 @@ async function createCart(user) {
 }
 
 async function findUserCart(userId) {
-  
   try {
     let cart = await Cart.findOne({ user: userId });
-   
+
     let cartItems = await CartItem.find({ cart: cart._id }).populate("product");
     cart.cartItems = cartItems;
     let totalPrice = 0;
@@ -29,7 +28,7 @@ async function findUserCart(userId) {
       totalDiscountedPrice += cartItem.discountedPrice;
       totalItem += cartItem.quantity;
     }
-    cart.totalDiscountedPrice=totalDiscountedPrice;
+    cart.totalDiscountedPrice = totalDiscountedPrice;
     cart.totalPrice = totalPrice;
     cart.totalItem = totalItem;
     cart.discounte = totalPrice - totalDiscountedPrice;
@@ -44,8 +43,6 @@ async function addCartItem(userId, req) {
   try {
     const cart = await Cart.findOne({ user: userId });
     const product = await Product.findById(req.productId);
-
-    
 
     const isPresent = await CartItem.findOne({
       cart: cart._id,
@@ -66,16 +63,15 @@ async function addCartItem(userId, req) {
       });
 
       const createdCartItem = await cartItem.save();
-      
-       cart.cartItems.push(createdCartItem);
+
+      cart.cartItems.push(createdCartItem);
       await cart.save();
 
       return "Item added to cart";
-    } 
+    }
   } catch (error) {
     throw new Error(error.message);
   }
 }
-
 
 module.exports = { createCart, findUserCart, addCartItem };

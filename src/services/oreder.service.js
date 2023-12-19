@@ -49,7 +49,6 @@ async function createOrder(user, shipAddress) {
 }
 
 async function placeOrder(orderId) {
- 
   const order = await findOrderById(orderId);
 
   order.orderStatus = "PLACED";
@@ -83,7 +82,6 @@ async function deliverOrder(orderId) {
 }
 
 async function cancelledOrder(orderId) {
- 
   const order = await findOrderById(orderId);
 
   order.orderStatus = "Cancelled";
@@ -107,7 +105,6 @@ async function findOrderById(orderId) {
     throw error;
   }
 }
-
 
 async function userOrderHistory(userId) {
   try {

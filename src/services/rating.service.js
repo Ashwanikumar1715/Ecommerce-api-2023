@@ -31,5 +31,5 @@ async function getProductRating(productId) {
 
 module.exports = {
   createRating,
-  getProductRating
+  getProductRating,
 };

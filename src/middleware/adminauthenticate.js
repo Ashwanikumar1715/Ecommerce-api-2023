@@ -1,7 +1,19 @@
+// const isAdmin = (req, res, next) => {
+//     const user = req.user;
+
+//     // Assuming "ADMIN" is the role for administrators
+//     if (!user || user.role !== "ADMIN") {
+//       return res.status(403).send({ error: "Access forbidden. Admins only." });
+//     }
+
+//     next();
+//   };
+
 const userService = require("../services/user.service");
 const jwtProvider = require("../config/jwtProvider"); // Import your JWT provider
+const { use } = require("..");
 
-const authenticate = async (req, res, next) => {
+const adminauthenticate = async (req, res, next) => {
   // console.log('Request payload before authentication:', req.body);
   // Bearer token..........
   try {
@@ -10,9 +22,11 @@ const authenticate = async (req, res, next) => {
       return res.status(401).send({ error: "Token not found..." }); // Corrected the status code to 401 for unauthorized
     }
     const userId = jwtProvider.getUserIdFromToken(token);
-    const user = userService.findUserById(userId);
-    if (!user) {
-      return res.status(401).send({ error: "User not found..." }); // You should handle this case
+    // console.log("userId",userId)
+    const user = await userService.findUserById(userId);
+    // console.log("user",user);
+    if (!user || user.role === "CUSTOMER") {
+      return res.status(401).send({ error: "Access forbidden. Admins only." }); // You should handle this case
     }
     req.user = user;
   } catch (error) {
@@ -22,4 +36,4 @@ const authenticate = async (req, res, next) => {
   next();
 };
 
-module.exports = authenticate;
+module.exports = adminauthenticate;
