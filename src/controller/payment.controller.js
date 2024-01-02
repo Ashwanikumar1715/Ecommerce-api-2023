@@ -1,9 +1,9 @@
 const paymentService = require("../services/razorpay.service");
 
-const createPaymentLinkController = async (req, res) => {
+const createPaymentLink = async (req, res) => {
   try {
     console.log("Before creating payment link");
-    const paymentLink = await paymentService.createPaymentLinkService(
+    const paymentLink = await paymentService.createPaymentLink(
       req.params.id
     );
     console.log("After creating payment link");
@@ -26,6 +26,6 @@ const updatePaymentInformation = async (req, res) => {
 };
 
 module.exports = {
-  createPaymentLinkController,
+  createPaymentLink,
   updatePaymentInformation,
 };

@@ -1,39 +1,33 @@
-// const isAdmin = (req, res, next) => {
-//     const user = req.user;
-
-//     // Assuming "ADMIN" is the role for administrators
-//     if (!user || user.role !== "ADMIN") {
-//       return res.status(403).send({ error: "Access forbidden. Admins only." });
-//     }
-
-//     next();
-//   };
-
+// adminauthenticate.js
 const userService = require("../services/user.service");
-const jwtProvider = require("../config/jwtProvider"); // Import your JWT provider
-const { use } = require("..");
+const jwtProvider = require("../config/jwtProvider");
 
 const adminauthenticate = async (req, res, next) => {
-  // console.log('Request payload before authentication:', req.body);
-  // Bearer token..........
   try {
     const token = req.headers.authorization?.split(" ")[1];
+    console.log("Token:", token); // Log the token
+
     if (!token) {
-      return res.status(401).send({ error: "Token not found..." }); // Corrected the status code to 401 for unauthorized
+      return res.status(401).send({ error: "Token not found..." });
     }
+
     const userId = jwtProvider.getUserIdFromToken(token);
-    // console.log("userId",userId)
+    console.log("UserID:", userId); // Log the user ID
+
     const user = await userService.findUserById(userId);
-    // console.log("user",user);
-    if (!user || user.role === "CUSTOMER") {
-      return res.status(401).send({ error: "Access forbidden. Admins only." }); // You should handle this case
+    console.log("User:", user); // Log the user object
+
+    if (!user || user.role !== "ADMIN") {
+      console.log("Non-admin user or user not found");
+      return res.status(404).send({ error: "Not Found" });
     }
+
     req.user = user;
+    next();
   } catch (error) {
+    console.error("Error in adminauthenticate:", error);
     return res.status(500).send({ error: error.message });
   }
-  // console.log('Request payload after authentication:', req.body);
-  next();
 };
 
 module.exports = adminauthenticate;

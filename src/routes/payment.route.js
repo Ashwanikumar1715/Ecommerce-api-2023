@@ -7,7 +7,7 @@ const paymentController = require("../controller/payment.controller");
 router.post(
   "/:id",
   authenticate,
-  paymentController.createPaymentLinkController
+  paymentController.createPaymentLink
 );
 router.get("/", authenticate, paymentController.updatePaymentInformation);
 

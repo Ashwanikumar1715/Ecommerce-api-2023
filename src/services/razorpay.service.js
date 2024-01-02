@@ -1,7 +1,7 @@
 const razorpay = require("../config/rajorPayClient");
 const orderService = require("../services/oreder.service");
 
-const createPaymentLinkService = async (orderId) => {
+const createPaymentLink = async (orderId) => {
   try {
     const order = await orderService.findOrderById(orderId);
     // console.log("order",order);
@@ -18,7 +18,7 @@ const createPaymentLinkService = async (orderId) => {
         email: true,
       },
       reminder_enable: true,
-      callback_url: `https://ashwanimartf.onrender.com/payments/${orderId}`,
+      callback_url: `http://localhost:3000/payment/${orderId}`,
       callback_method: "get",
     };
 
@@ -75,6 +75,6 @@ const updatePaymentInformation = async (reqData) => {
 };
 
 module.exports = {
-  createPaymentLinkService,
+  createPaymentLink,
   updatePaymentInformation,
 };

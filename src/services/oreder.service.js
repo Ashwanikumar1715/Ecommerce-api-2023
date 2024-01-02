@@ -6,6 +6,7 @@ const cartService = require("../services/cart.service");
 async function createOrder(user, shipAddress) {
   let address;
   let existAddress = await Address.findById(shipAddress._id);
+ 
   if (existAddress) {
     address = existAddress;
   } else {
@@ -13,7 +14,7 @@ async function createOrder(user, shipAddress) {
     address.user = user;
     await address.save();
 
-    user.address.push(address);
+    user.address.push(address._id);
     await user.save();
   }
 
