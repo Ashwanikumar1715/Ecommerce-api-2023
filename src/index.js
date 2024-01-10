@@ -11,8 +11,8 @@ const adminauthenticate = require("./middleware/adminauthenticate.js");
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:3000",
-    // origin: "https://ashwanimartf.onrender.com",
+    // origin: "http://localhost:3000",
+    origin: "https://ashwanimartf.onrender.com",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "UPDATE"],
   })
